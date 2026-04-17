@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hey you 🌸</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rose:    #f4a7b9;
+      --peach:   #fdd9b5;
+      --cream:   #fff8f2;
+      --mauve:   #c9829e;
+      --sage:    #a8c5b0;
+      --text:    #5c3d4a;
+      --soft:    #e8c4d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Lora', serif;
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* custom cursor */
+    .cursor {
+      position: fixed;
+      width: 18px; height: 18px;
+      background: var(--rose);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, background 0.3s;
+      mix-blend-mode: multiply;
+    }
+
+    /* floating petals background */
+    .petals-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -60px;
+      font-size: 1.4rem;
+      animation: fall linear infinite;
+      opacity: 0.55;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+      10%  { opacity: 0.55; }
+      90%  { opacity: 0.55; }
+      100% { transform: translateY(105vh) rotate(720deg) translateX(40px); opacity: 0; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+    }
+
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: pulse 6s ease-in-out infinite alternate;
+    }
+    .blob1 { width: 420px; height: 420px; background: var(--rose);  top: -80px; left: -100px; }
+    .blob2 { width: 320px; height: 320px; background: var(--peach); bottom: 0; right: -80px; animation-delay: 2s; }
+    .blob3 { width: 200px; height: 200px; background: var(--sage);  top: 40%; left: 55%; animation-delay: 4s; }
+
+    @keyframes pulse {
+      from { transform: scale(1) translate(0,0); }
+      to   { transform: scale(1.15) translate(20px, -20px); }
+    }
+
+    .tag {
+      font-size: 0.85rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mauve);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      line-height: 1.1;
+      color: var(--text);
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--mauve);
+    }
+
+    .hero-sub {
+      margin-top: 1.5rem;
+      max-width: 520px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #8a5f6e;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.9s forwards;
+    }
+
+    .scroll-hint {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mauve);
+      opacity: 0;
+      animation: fadeUp 0.9s 1.3s forwards, bob 2s 2s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ── CARDS ── */
+    .cards-section {
+      position: relative;
+      z-index: 1;
+      padding: 6rem 2rem;
+    }
+    .cards-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 3rem;
+    }
+    .cards-section h2 span { color: var(--mauve); font-style: italic; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.8rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 4px 30px rgba(200,130,158,0.12);
+      border: 1.5px solid rgba(244,167,185,0.25);
+      transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .card.visible {
+      animation: fadeUp 0.7s forwards;
+    }
+    .card:hover {
+      transform: translateY(-8px) rotate(-0.5deg);
+      box-shadow: 0 16px 48px rgba(200,130,158,0.22);
+    }
+    .card-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--mauve);
+      margin-bottom: 0.5rem;
+    }
+    .card p { font-size: 0.95rem; line-height: 1.7; color: #8a5f6e; }
+
+    /* ── PROMISE ── */
+    .promise-section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2rem 7rem;
+      text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(244,167,185,0.12) 40%, transparent);
+    }
+    .promise-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--text);
+      margin-bottom: 2.5rem;
+    }
+    .promise-box {
+      max-width: 640px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 32px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 8px 50px rgba(200,130,158,0.15);
+      border: 2px solid rgba(244,167,185,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .promise-box::before {
+      content: '🌸';
+      position: absolute;
+      font-size: 10rem;
+      opacity: 0.05;
+      top: -20px; right: -20px;
+      pointer-events: none;
+    }
+    .promise-box p {
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: #7a4f5e;
+      margin-bottom: 1.2rem;
+    }
+    .promise-box p:last-child { margin-bottom: 0; }
+    .promise-box strong {
+      color: var(--mauve);
+      font-style: italic;
+    }
+
+    /* ── HEARTS ── */
+    .hearts-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .heart-btn {
+      font-size: 1.6rem;
+      border: none;
+      background: none;
+      cursor: none;
+      transition: transform 0.2s;
+    }
+    .heart-btn:hover { transform: scale(1.4) rotate(-10deg); }
+    .heart-btn.pop { animation: heartPop 0.4s ease; }
+    @keyframes heartPop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.7) rotate(-15deg); }
+      100% { transform: scale(1); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 3rem 2rem;
+      font-size: 0.85rem;
+      color: #c4a0b0;
+      letter-spacing: 0.08em;
+    }
+    footer span { color: var(--rose); }
+
+    /* util */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- floating petals -->
+<div class="petals-bg" id="petals"></div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-blob blob1"></div>
+  <div class="hero-blob blob2"></div>
+  <div class="hero-blob blob3"></div>
+
+  <p class="tag">a little something for you 🌸</p>
+  <h1>Hey <em>you</em>,<br>you're doing great.</h1>
+  <p class="hero-sub">
+    Life can feel heavy sometimes — work, people, everything at once.
+    But you're still here, still going. That takes real strength.
+  </p>
+  <p class="scroll-hint">scroll to read ↓</p>
+</section>
+
+<!-- ── REMINDER CARDS ── -->
+<section class="cards-section">
+  <h2>A few things to <span>remember</span></h2>
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">🌷</div>
+      <h3>You are enough</h3>
+      <p>Exactly as you are right now, in this moment — not after the next achievement, not after things settle. Right now.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">☁️</div>
+      <h3>Hard days pass</h3>
+      <p>Every storm runs out of rain. What you're going through is real and it's hard — and it will not last forever.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✨</div>
+      <h3>Your feelings are valid</h3>
+      <p>You don't have to explain or justify how you feel. You're allowed to be sad, frustrated, tired — all of it.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌿</div>
+      <h3>Rest is not giving up</h3>
+      <p>Taking care of yourself isn't weakness. It's how you keep going. Please be gentle with yourself.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌻</div>
+      <h3>You have survived 100% of your bad days</h3>
+      <p>Every single hard day you've faced — you made it through. Your track record is perfect.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🦋</div>
+      <h3>Growth is happening</h3>
+      <p>Even when it doesn't feel like it. Even in the quiet, difficult stretches — you are becoming.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROMISE ── -->
+<section class="promise-section">
+  <h2>I mean this, truly 🤍</h2>
+  <div class="promise-box">
+    <p>
+      I know things have been a lot lately — work piling up, life feeling uncertain,
+      your heart needing some time to heal. I see you carrying all of that.
+    </p>
+    <p>
+      I just want you to know: <strong>I am always, always in your corner.</strong>
+      No matter what version of yourself shows up — messy, tired, unsure —
+      that person is still someone I'm happy to know.
+    </p>
+    <p>
+      You don't have to have it together to reach out. You don't need a reason.
+      I'm here on the good days and especially on the hard ones.
+    </p>
+    <p>
+      <strong>You are loved. You are not alone. And you've got this.</strong> 🌸
+    </p>
+  </div>
+
+  <div class="hearts-row" id="hearts">
+    <button class="heart-btn" onclick="pop(this)">🌸</button>
+    <button class="heart-btn" onclick="pop(this)">💛</button>
+    <button class="heart-btn" onclick="pop(this)">🌷</button>
+    <button class="heart-btn" onclick="pop(this)">✨</button>
+    <button class="heart-btn" onclick="pop(this)">🤍</button>
+    <button class="heart-btn" onclick="pop(this)">🌿</button>
+    <button class="heart-btn" onclick="pop(this)">🦋</button>
+  </div>
+</section>
+
+<footer>
+  made with <span>♥</span> just for you
+</footer>
+
+<script>
+  // cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+
+  // floating petals
+  const petalEmojis = ['🌸','🌷','✨','🍃','🌼','💮','🕊️'];
+  const bg = document.getElementById('petals');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+    p.style.left     = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.9 + Math.random() * 1.2) + 'rem';
+    p.style.animationDuration  = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay     = (Math.random() * 14) + 's';
+    bg.appendChild(p);
+  }
+
+  // scroll-reveal cards
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 120);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => observer.observe(c));
+
+  // heart pop
+  function pop(el) {
+    el.classList.remove('pop');
+    void el.offsetWidth;
+    el.classList.add('pop');
+    // spawn a floating emoji
+    const fly = document.createElement('span');
+    fly.textContent = el.textContent;
+    fly.style.cssText = `position:fixed;left:${el.getBoundingClientRect().left}px;top:${el.getBoundingClientRect().top}px;font-size:1.8rem;pointer-events:none;z-index:999;animation:flyUp 1.2s ease forwards;`;
+    document.body.appendChild(fly);
+    setTimeout(() => fly.remove(), 1200);
+  }
+
+  // dynamic flyUp for popped hearts
+  const style = document.createElement('style');
+  style.textContent = `@keyframes flyUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(1.5)}}`;
+  document.head.appendChild(style);
+</script>
+</body>
+</html>
